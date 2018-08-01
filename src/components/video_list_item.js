@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
-export const VideoListItem = ({ video }) => {
+export const VideoListItem = ({ video, onVideoSelect }) => {
   //same as es6 {video} as param, has to match props name
   // const video = props.video;
   console.log("video in list", video);
   const imgUrl = video.snippet.thumbnails.default.url;
   return (
-    <li className="list-group-item">
+    <li className="list-group-item" onClick={() => onVideoSelect(video)}>
       <div className="video-list-media">
         <div className="media-left">
           <img className="media-object" src={imgUrl} />

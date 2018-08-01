@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import YTSearch from "youtube-api-search";
@@ -12,7 +13,6 @@ import VideoDetail from "./components/video_detail";
 // import reducers from './reducers';
 //
 // const createStoreWithMiddleware = applyMiddleware()(createStore);
-const api_key = "AIzaSyBGTKNH-5LKZ5abSWB2vXN0rORrm4_UoPg";
 
 class App extends Component {
   constructor(props) {
@@ -22,7 +22,11 @@ class App extends Component {
       selectedVideo: null
     };
     //set the initial state of the videos
-    YTSearch({ key: api_key, term: "samsung note 9" }, videos => {
+    this.videoSearch("samsung note 9");
+  }
+
+  videoSearch(term) {
+    YTSearch({ key: api_key, term: term }, videos => {
       // this.setState({ videos: videos });
       this.setState({
         videos: videos,
@@ -31,12 +35,16 @@ class App extends Component {
       // console.log("videios", this.state.videos);
     });
   }
+
   render() {
+    const videoSearch = _.debounce(term => {
+      this.videoSearch(term);
+    }, 300);
     return (
       <div>
-        <SearchBar />
+        <SearchBar onSearchTermChange={videoSearch} />
         <VideoDetail video={this.state.selectedVideo} />
-        <VideoList videos={this.state.videos} />
+        <VideoList videos={this.state.videos} onVideoSelect={selectedVideo => this.setState({ selectedVideo })} />
       </div>
     );
   }
